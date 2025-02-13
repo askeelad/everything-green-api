@@ -12,9 +12,15 @@ export default async function Dashboard() {
   }
 
   // Fetch users using cache tags
-  const users = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/users`, {
-    next: { tags: ["users-data"] }, // ✅ Correct way to enable cache revalidation
-  }).then((res) => res.json());
+  const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/users`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "same-origin", // This ensures cookies are sent
+  });
+
+  const users = await res.json();
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-6">

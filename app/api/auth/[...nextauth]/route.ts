@@ -1,13 +1,12 @@
-import NextAuth, { NextAuthOptions } from "next-auth";
+import NextAuth, { getServerSession, NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { prisma } from "@/lib/prisma";
 import { JWT } from "next-auth/jwt";
+import jwt from "jsonwebtoken";
 
 // Define NextAuth options
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -31,13 +30,24 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+  secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt",
     maxAge: 5 * 60, // 5 minutes
   },
+  cookies: {
+    sessionToken: {
+      name: "next-auth.session-token", // Cookie name
+      options: {
+        httpOnly: true,
+        sameSite: "lax", // or "strict" depending on your needs
+        path: "/",
+      },
+    },
+  },
   jwt: {
     secret: process.env.JWT_SECRET,
-    maxAge: 60 * 3, // 3 minutes
+    maxAge: 60 * 3,
   },
   pages: {
     signIn: "/login",
@@ -58,7 +68,7 @@ export const authOptions: NextAuthOptions = {
         currentTime - tokenIat > 59 * 60 * 1000
       ) {
         token.iat = currentTime;
-        token.exp = Math.floor(currentTime / 1000) + 60 * 60; // 1 hour expiration
+        token.exp = Math.floor(currentTime / 1000) + 60 * 60;
       }
 
       return token;
@@ -67,12 +77,15 @@ export const authOptions: NextAuthOptions = {
       if (token.id && token.email) {
         session.user.id = token.id as string;
         session.user.email = token.email;
+        session.jwt = token;
       }
       return session;
     },
   },
 };
 
+const getSession = async () => await getServerSession(authOptions);
+
 // Export the NextAuth handler for the App Router
 const handler = NextAuth(authOptions);
-export { handler as GET, handler as POST };
+export { handler as GET, handler as POST, getSession };
