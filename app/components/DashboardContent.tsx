@@ -34,7 +34,7 @@ export default function DashboardContent({
       setName("");
       setEmail("");
       setPassword("");
-      setTimeout(() => setIsModalOpen(false), 1000); // Close modal after success
+      setTimeout(() => setIsModalOpen(false), 1000);
     } else {
       setMessage("Failed to create user.");
     }

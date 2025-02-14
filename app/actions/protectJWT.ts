@@ -5,9 +5,9 @@ import { authOptions } from "../api/auth/[...nextauth]/route";
 import { NextRequest, NextResponse } from "next/server";
 
 const protectJWT = async (req: NextRequest) => {
-  console.log("protect");
+  //   console.log("protect");
   const session = await getServerSession(authOptions);
-  console.log(session);
+  //   console.log(session);
 
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

@@ -5,15 +5,16 @@ import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 
 export default async function Dashboard() {
-  // Get session on the server-side
   const session = await getServerSession(authOptions);
+  console.log("dashboard");
+  //   console.log(session);
 
   if (!session) {
     redirect("/login");
   }
 
-  const headersData = await headers(); // Await headers() to get the actual headers object
-  const headersObject = Object.fromEntries(headersData.entries()); // Convert to plain object
+  const headersData = await headers();
+  const headersObject = Object.fromEntries(headersData.entries());
 
   const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/users`, {
     method: "GET",

@@ -15,7 +15,7 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        console.log(credentials);
+        // console.log(credentials);
         if (!credentials?.email || !credentials?.password) return null;
 
         // Fetch user from database
@@ -48,13 +48,14 @@ export const authOptions: NextAuthOptions = {
   },
   jwt: {
     secret: process.env.JWT_SECRET,
-    maxAge: 60 * 3,
+    maxAge: 3 * 60,
   },
   pages: {
     signIn: "/login",
   },
   callbacks: {
     async jwt({ token, user }: { token: JWT; user?: any }) {
+      console.log("inside jwt token callback");
       if (user) {
         token.id = user.id;
         token.email = user.email;
@@ -62,15 +63,9 @@ export const authOptions: NextAuthOptions = {
       }
 
       const currentTime = Date.now();
-      const tokenIat = token.iat ? token.iat : currentTime;
-
-      if (
-        typeof tokenIat === "number" &&
-        currentTime - tokenIat > 59 * 60 * 1000
-      ) {
-        token.iat = currentTime;
-        token.exp = Math.floor(currentTime / 1000) + 60 * 60;
-      }
+      console.log(typeof token.exp);
+      console.log(token.exp);
+      console.log(currentTime);
 
       return token;
     },

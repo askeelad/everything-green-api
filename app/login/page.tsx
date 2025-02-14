@@ -13,7 +13,7 @@ const LoginPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Email:", email);
+    // console.log("Email:", email);
     const defaultuser = await createAdmin({ email, password });
 
     const result = await signIn("credentials", {
