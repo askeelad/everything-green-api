@@ -1,14 +1,18 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../auth/[...nextauth]/route";
+import protectJWT from "@/app/actions/protectJWT";
 
 // Fetch user by ID
 export async function GET(
-  req: Request,
+  req: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const session = await getServerSession(authOptions);
+  const authResponse = await protectJWT(req);
+  if (authResponse) {
+    return authResponse; // If unauthorized, return the response immediately
+  }
   try {
     const user = await prisma.user.findUnique({
       where: { id: params.id },

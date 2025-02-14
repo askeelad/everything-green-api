@@ -3,18 +3,19 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { JWT } from "next-auth/jwt";
-import jwt from "jsonwebtoken";
 
 // Define NextAuth options
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
+      id: "credentials",
       name: "Credentials",
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+        console.log(credentials);
         if (!credentials?.email || !credentials?.password) return null;
 
         // Fetch user from database
@@ -39,7 +40,7 @@ export const authOptions: NextAuthOptions = {
     sessionToken: {
       name: "next-auth.session-token", // Cookie name
       options: {
-        httpOnly: true,
+        httpOnly: false,
         sameSite: "lax", // or "strict" depending on your needs
         path: "/",
       },

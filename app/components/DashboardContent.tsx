@@ -26,6 +26,7 @@ export default function DashboardContent({
       method: "POST",
       body: JSON.stringify({ name, email, password }),
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
     });
 
     if (res.ok) {

@@ -12,10 +12,6 @@ const SECRET = process.env.WEBHOOK_SECRET;
 async function verifySignature(req: Request, body: any) {
   const signature = req.headers.get("x-signature") as string;
   const expectedSignature = await getExpectedSignature(body);
-  console.log(body);
-  console.log(signature);
-  console.log(expectedSignature);
-  console.log(SECRET as string);
   return signature === expectedSignature;
 }
 
