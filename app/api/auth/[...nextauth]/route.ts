@@ -55,7 +55,7 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async jwt({ token, user }: { token: JWT; user?: any }) {
-      console.log("inside jwt token callback");
+      //   console.log("inside jwt token callback");
       if (user) {
         token.id = user.id;
         token.email = user.email;
@@ -63,9 +63,9 @@ export const authOptions: NextAuthOptions = {
       }
 
       const currentTime = Date.now();
-      console.log(typeof token.exp);
-      console.log(token.exp);
-      console.log(currentTime);
+      //   console.log(typeof token.exp);
+      //   console.log(token.exp);
+      //   console.log(currentTime);
 
       return token;
     },
