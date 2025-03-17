@@ -16,6 +16,7 @@ async function verifySignature(req: Request, body: any) {
 }
 
 // Create expected signature from the request body
+//test
 async function getExpectedSignature(body: any) {
   return crypto
     .createHmac("sha256", SECRET as string)
